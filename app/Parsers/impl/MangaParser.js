@@ -1,79 +1,87 @@
 "use strict";
 const cheerio = require("cheerio");
 const util = require("../../Utils/util");
+const BaseParser = require("../BaseParser");
 const Manga = use("App/Models/Manga");
 const Database = use("Database");
 
-class MangaParser {
-    init(data) {
-        const $ = cheerio.load(data);
-        this.parse($);
+class MangaParser extends BaseParser {
+    async init(html, input) {
+        const $ = cheerio.load(html);
+        this.crawlUrl = input.crawl_url;
+        this.siteUrl = 'https://manhwa18.net/';
+        console.log(input.crawl_url);
+        await this.parse($);
     }
 
     async parse($) {
-        let header = $("div.truyen_if_wrap");
-        let image = $(header).find("img");
+        let infoCover = $(".info-cover");
+        let info = $('.manga-info');
+        let image = $(infoCover).find("img");
         let data = {};
         if (image) {
             data.image = $(image)
-                .attr("src")
-                .replace(/-[0-9]+x[0-9]+/gm, "");
+                .attr("src");
+            data.image = this.siteUrl + data.image;
         }
-        let info = $(header).find("ul.truyen_info_right");
-        data.name = this.parseInfo($, info, "h1.entry-title");
+        data.name = this.parseInfo($, info, "h3");
+        data.slug = util.slug(data.name);
         data.authors = this.parseInfo(
-            $,
-            info,
-            "li:nth-child(2) a",
-            "multiple"
-        );
-        data.categories = this.parseInfo(
             $,
             info,
             "li:nth-child(3) a",
             "multiple"
         );
-        data.status = this.parseInfo($, info, "li:nth-child(4) a");
-        data.translators = this.parseInfo($, info, "li:nth-child(5) a", 'multiple');
-        let description = $('div.entry-content');
+        data.categories = this.parseInfo(
+            $,
+            info,
+            "li:nth-child(4) a",
+            "multiple"
+        );
+        data.status = this.parseInfo($, info, "li:nth-child(5) a");
+        data.translators = this.parseInfo($, info, "li:nth-child(6) a", 'multiple');
+        let description = $('.summary-content');
         if (description) {
             data.description = $(description).html();
-            data.description = util.removeEmoji(data.description);
         }
         data.chapters = [];
-        let listChapters = $('div.chapter-list div.row');
+        let listChapters = $('ul.list-chapters a');
         if (listChapters) {
+            let chapters = [];
             listChapters.each((index, element) => {
-                let info = $(element).find('span a');
-                if (info) {
-                    let name = $(info).text();
-                    data.chapters.push({
+                let ele = $(element).find('li .chapter-name');
+                if (ele) {
+                    let name = data.name + ' ' + $(ele).text();
+                    chapters.push({
                         name: name,
                         slug: util.slug(name),
-                        crawl_url: $(info).attr('href'),
+                        crawl_url: this.siteUrl + $(element).attr('href'),
+                        sorder: listChapters.length - index - 1,
                     });
                 }
             })
+            data.chapters = chapters.reverse();
         }
         if (data) {
-            this.saveData(data);
+            data.crawl_url = this.crawlUrl;
+            await this.saveData(data);
         }
     }
 
-    saveManga(manga, data) {
-        let keys = ['status', 'image', 'description'];
+    async saveManga(manga, data) {
+        let keys = ['name', 'slug', 'status', 'image', 'description'];
         for (let key of keys) {
             if (manga[key] != data[key]) {
                 manga[key] = data[key];
             }
         }
-        manga.save();
+        await manga.save();
     }
 
     async saveData(data) {
-        let manga = await Manga.findBy('slug', util.slug(data.name));
+        let manga = await Manga.findBy('crawl_url', this.crawlUrl);
         if (manga) {
-            this.saveManga(manga, data);
+            await this.saveManga(manga, data);
         } else {
             manga = new Manga();
             manga.name = data.name;
@@ -81,22 +89,23 @@ class MangaParser {
             manga.image = data.image;
             manga.status = data.status;
             manga.description = data.description;
-            manga.save();
+            manga.crawl_url = data.crawl_url;
+            await manga.save();
         }
         for (let item of data.categories) {
-            this.saveRelation(manga.id, item, 'category', 'category_n_manga', 'category_id');
+            await this.saveRelation(manga.id, item, 'category', 'category_n_manga', 'category_id');
         }
         for (let item of data.authors) {
-            this.saveRelation(manga.id, item, 'author', 'author_n_manga', 'author_id');
+            await this.saveRelation(manga.id, item, 'author', 'author_n_manga', 'author_id');
         }
         for (let item of data.translators) {
-            this.saveRelation(manga.id, item, 'translator', 'manga_n_translator', 'translator_id');
+            await this.saveRelation(manga.id, item, 'translator', 'manga_n_translator', 'translator_id');
         }
         for (let item of data.chapters) {
-            this.saveOneToManyRelation(manga.id, item, 'chapter');
+            await this.saveOneToManyRelation(manga.id, item, 'chapter');
         }
 
-        console.log('parsed: ', manga.name);
+        console.log('parsed manga: ', manga.name);
     }
 
     async saveOneToManyRelation(mangaId, data, table) {
@@ -106,7 +115,9 @@ class MangaParser {
         if (!obj) {
             data.manga_id = mangaId;
             await Database.table(table).insert(data);
-        } 
+        } else {
+            await Database.table(table).where('slug', data.slug).update(data);
+        }
     }
 
     async saveRelation(mangaId, name, table, pivot, column) {

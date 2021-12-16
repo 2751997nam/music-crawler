@@ -1,84 +1,33 @@
 "use strict";
+
 const Helpers = use("Helpers");
 const dir = Helpers.appRoot() + "/app";
 const Util = use("App/Utils/util");
-var amqp = require("amqplib/callback_api");
+const { Worker } = use('bullmq');
 const Config = use("Config");
-
+const parserManger = require("../Parsers/ParserManager");
 class ListenerManager {
     async init() {
         this.implDir = dir + "/Listeners/impl";
-        const connection = await this.createConnection();
-        const channel = await this.createChannel(connection);
-        var exchange = Config.get("crawl.queueName");
-        channel.assertExchange(exchange, "fanout", {
-            durable: true,
-        });
-        channel.assertQueue(exchange, {
-            durable: true,
-        });
-        channel.prefetch(1);
-
-        channel.consume(exchange, (msg) => {
-            if (msg.content) {
-                let data = JSON.parse(msg.content.toString());
-                console.log("reviced", data);
-                if (data.listener) {
-                    const crawler = this.loadCrawlers(
-                        this.implDir + "/" + data.listener
-                    );
-                    crawler.init(data.data);
-                }
-            }
-            channel.ack(msg);
-        });
-    }
-
-    createConnection() {
-        return new Promise((resolve, reject) => {
-            amqp.connect("amqp://localhost", function (error, connection) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(connection);
-                }
-            });
-        });
-    }
-
-    createChannel(connection) {
-        return new Promise((resolve, reject) => {
-            connection.createChannel(function (error, channel) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(channel);
-                }
-            });
-        });
-    }
-
-    assertQueue(channel, queue) {
-        return new Promise((resolve, reject) => {
-            channel.assertQueue(
-                queue,
-                {
-                    durable: true,
-                },
-                function (error, q) {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(q);
-                    }
-                }
+        var queueName = Config.get("crawl.queueName");
+        this.worker = new Worker(queueName, async job => {
+            const listener = this.loadClass(
+                this.implDir + "/" + job.name
             );
+            console.log(job.name, job.data.crawl_url);
+            let result = await listener.init(job.data);
+            await parserManger.init(result, job.data, listener.getParser());
+        }, {
+            limiter: {
+                concurrency: 10,
+                duration: 30000,
+            },
         });
     }
 
-    loadCrawlers(dir) {
-        var crawler = new (require(dir))();
-        return crawler;
+    loadClass(dir) {
+        var className = new (require(dir))();
+        return className;
     }
 }
 

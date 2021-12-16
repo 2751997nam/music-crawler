@@ -26,12 +26,14 @@
     "@adonisjs/lucid": "^6.1.3",
     "@adonisjs/session": "^1.0.27",
     "@adonisjs/shield": "^1.0.8",
-    "amqplib": "^0.6.0",
     "axios": "^0.19.2",
+    "bull": "^4.1.1",
+    "bullmq": "^1.57.0",
     "cheerio": "^1.0.0-rc.3",
     "got": "^11.5.0",
     "mysql": "^2.18.1",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "tick": "^0.1.1"
   },
   "devDependencies": {},
   "autoload": {

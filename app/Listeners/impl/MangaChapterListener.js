@@ -2,9 +2,9 @@
 const { exec } = require('child_process');
 const BaseListener = require('../BaseListener');
 
-class MangaListener extends BaseListener {
+class MangaChapterListener extends BaseListener {
     getParser() {
-        return 'MangaParser';
+        return 'MangaChapterParser';
     }
 
     async init (data) {
@@ -12,4 +12,4 @@ class MangaListener extends BaseListener {
     }
 }
 
-module.exports = MangaListener;
+module.exports = MangaChapterListener;
