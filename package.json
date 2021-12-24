@@ -32,8 +32,12 @@
     "cheerio": "^1.0.0-rc.3",
     "got": "^11.5.0",
     "mysql": "^2.18.1",
+    "node-schedule": "^2.1.0",
+    "redis": "^4.0.1",
     "request": "^2.88.2",
-    "tick": "^0.1.1"
+    "simple-node-logger": "^21.8.12",
+    "tick": "^0.1.1",
+    "xml2json": "^0.12.0"
   },
   "devDependencies": {},
   "autoload": {

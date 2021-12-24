@@ -1,20 +1,17 @@
 "use strict";
 
 const Database = use("Database");
-const { Queue, QueueScheduler } = use('bullmq');
-
-const Config = use('Config');
+const QueueClient = use('App/Utils/QueueClient');
 
 class BaseCrawler {
-    initQueue() {
-        var queueName = Config.get('crawl.queueName');
-        this.queueName = queueName;
-        const myQueueScheduler = new QueueScheduler(queueName);
-        this.queue = new Queue(queueName);
+    addJob(listener, data) {
+        QueueClient.addJob(listener, data, {priority: 100});
     }
 
-    addJob(listener, data) {
-        this.queue.add(listener, data, {delay: 100});
+    getDomain(url) {
+        let { hostname } = new URL(url);
+        hostname = hostname.replace('www.', '');
+        return hostname;
     }
 }
 

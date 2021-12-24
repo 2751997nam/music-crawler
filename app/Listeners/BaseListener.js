@@ -1,5 +1,6 @@
 'use strict'
 const { exec } = require('child_process');
+const Log = use('App/Utils/Log');
 
 class BaseListener {
     constructor() {
@@ -16,7 +17,7 @@ class BaseListener {
         let result = await new Promise((resolve, reject) => {
             exec("curl --location --request GET '" + url + "'", function (error, stdout, stderr) {
                 if (error) {
-                    console.log('error', error);
+                    Log.error('error ', error);
                     reject(stderr);
                 } else {
                     resolve(stdout);

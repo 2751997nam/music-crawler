@@ -1,6 +1,6 @@
 'use strict'
 
-const { Queue, QueueScheduler } = use('bullmq');
+const QueueClient = use('App/Utils/QueueClient');
 const Config = use('Config');
 
 class BaseParser
@@ -22,22 +22,21 @@ class BaseParser
     async afterParse(crawlItems) {
         let listener = this.getListenerAfterParse();
         if (listener && crawlItems && crawlItems.length) {
-            this.initQueue();
             for (let item of crawlItems) {
+                item.domain = this.getDomain(item.crawl_url);
                 this.addJob(listener, item);
             }
         }
     }
 
-    initQueue() {
-        var queueName = Config.get('crawl.queueName');
-        this.queueName = queueName;
-        const myQueueScheduler = new QueueScheduler(queueName);
-        this.queue = new Queue(queueName);
+    getDomain(url) {
+        let { hostname } = new URL(url);
+        hostname = hostname.replace('www.', '');
+        return hostname;
     }
 
     addJob(listener, data) {
-        this.queue.add(listener, data, {delay: 100});
+        QueueClient.addJob(listener, data, {priority: 1});
     }
 }
 

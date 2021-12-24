@@ -5,7 +5,7 @@ class ParserManager
 {
     async init(html, input, parserName) {
         this.implDir = dir + "/Parsers/impl";
-        let parser = this.loadClass(this.implDir + '/' + parserName);
+        let parser = this.loadClass(this.implDir + '/' + input.domain + '/' + parserName);
         let result = await parser.init(html, input);
         await parser.afterParse(result);
     }

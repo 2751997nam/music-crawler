@@ -18,13 +18,24 @@
 */
 
 const { Ignitor } = require("@adonisjs/ignitor");
+const Log = require('./app/Utils/Log');
+const Redis = require('./app/Utils/Redis');
 
 new Ignitor(require("@adonisjs/fold"))
     .appRoot(__dirname)
     .fireHttpServer()
-    .catch(console.error);
+    .catch(Log.error);
+
+const schedule = require('node-schedule');
 
 const CrawlerManager = require(__dirname + "/app/Crawlers/CrawlerManager");
 const ListenerManager = require(__dirname + "/app/Listeners/ListenerManager");
-CrawlerManager.init();
-ListenerManager.init();
+
+const mangaParser = require(__dirname + '/app/Parsers/impl/manhwa18.net/ChapterParser');
+Redis.del('bull*').then(function () {
+    ListenerManager.init();
+});
+
+schedule.scheduleJob('0 */1 * * *', function(){
+    CrawlerManager.init();
+});

@@ -7,9 +7,10 @@ const Config = use('Config');
 
 class MangaChapterCrawler extends BaseCrawler {
     async init() {
-        let mangas = await Database.table("manga").where('status', '!=', 'Completed').select('*');
-        this.initQueue();
+        return ;
+        let mangas = await Database.table("manga").where('status', '=', 'ACTIVE').select('*');
         for (let item of mangas) {
+            item.domain = this.getDomain(item.crawl_url);
             this.addJob("MangaChapterListener", item);
         }
     }

@@ -4,29 +4,26 @@ const Config = use('Config');
 const got = require('got');
 const util = require('../../Utils/util');
 const Manga = use('App/Models/Manga');
+const MangaCrawlerManager = use('App/Crawlers/impl/MangaCrawlerManager');
 
 class CrawlMangaController {
     async crawl({request, response}) {
-        response.json({ok: '1'});
-        let result = await got(Config.get('crawl.list-manga'));
-        result = JSON.parse(result.body);
-        for (let item of result) {
-            let manga = await Manga.findBy('name', item.label);
-            if (!manga) {
-                Manga.create({
-                    name: item.label,
-                    slug: util.slug(item.label),
-                    image: item.img,
-                    crawl_url: item.link
-                })
-            } else {
-                manga.slug = util.slug(item.label);
-                manga.image = item.img;
-                manga.crawl_url = item.link;
-                manga.save();
+        const query = request._qs;
+        const crawler = new MangaCrawlerManager();
+        let filter = {};
+        if (query.all) {
+            filter.all = query.all;
+        }
+        else if (query.manga_ids) {
+            const crawlUrls = await Manga.query().whereIn('id', query.manga_ids.split(',')).pluck('crawl_url');
+            if (crawlUrls) {
+                filter.crawlUrls = crawlUrls;
             }
         }
-        response.json(result.length);
+
+        crawler.init(filter);
+
+        response.json({status: 'successful', result: []});
     }
 }
 

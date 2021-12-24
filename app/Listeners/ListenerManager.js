@@ -2,10 +2,10 @@
 
 const Helpers = use("Helpers");
 const dir = Helpers.appRoot() + "/app";
-const Util = use("App/Utils/util");
 const { Worker } = use('bullmq');
 const Config = use("Config");
 const parserManger = require("../Parsers/ParserManager");
+const Log = use('App/Utils/Log');
 class ListenerManager {
     async init() {
         this.implDir = dir + "/Listeners/impl";
@@ -14,7 +14,7 @@ class ListenerManager {
             const listener = this.loadClass(
                 this.implDir + "/" + job.name
             );
-            console.log(job.name, job.data.crawl_url);
+            Log.info(job.name + ' ', job.data.crawl_url);
             let result = await listener.init(job.data);
             await parserManger.init(result, job.data, listener.getParser());
         }, {

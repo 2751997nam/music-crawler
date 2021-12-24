@@ -1,16 +1,16 @@
 "use strict";
 const cheerio = require("cheerio");
-const util = require("../../Utils/util");
-const BaseParser = require("../BaseParser");
+const util = use("App/Utils/util");
+const BaseParser = use("App/Parsers/BaseParser");
 const Manga = use("App/Models/Manga");
 const Chapter = use("App/Models/Chapter");
 const Database = use("Database");
+const Log = use('App/Utils/Log');
 
 class MangaChapterParser extends BaseParser {
     async init(html, input) {
         const $ = cheerio.load(html);
         this.crawlUrl = input.crawl_url;
-        console.log(this.crawlUrl);
         this.siteUrl = 'https://manhwa18.net/';
         return await this.parse($);
     }
@@ -42,7 +42,7 @@ class MangaChapterParser extends BaseParser {
             data.crawl_url = this.crawlUrl;
             retVal = await this.saveData(data);
         }
-        console.log('parsed manga chapter: ', data.name);
+        Log.info('parsed manga chapter: ', data.name);
 
         return retVal;
     }
@@ -66,7 +66,7 @@ class MangaChapterParser extends BaseParser {
                 newChapters.push(chapterBySlug[slug]);
             }
         }
-        console.log('newChapters', newChapters);
+        Log.info('newChapters ', newChapters);
         for (let item of newChapters) {
             await this.saveOneToManyRelation(manga.id, item, 'chapter');
         }
@@ -91,7 +91,7 @@ class MangaChapterParser extends BaseParser {
                 });
             }
         } catch (error) {
-            console.log(error.message);
+            Log.error(error.message);
         }
 
         return retVal;
