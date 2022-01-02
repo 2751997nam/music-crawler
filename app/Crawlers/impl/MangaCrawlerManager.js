@@ -11,31 +11,19 @@ const Util = use('App/Utils/util');
 
 class MangaCrawlerManager extends BaseCrawler {
     async init(filter = null) {
-        let crawlUrls = null;
-        if (filter) {
-            crawlUrls = filter.crawlUrls;
-        }
-        if (!filter) {
-            crawlUrls = await this.getCrawlUrls();
-        }
-        else if (filter.all) {
-            crawlUrls = await this.getCrawlUrls(filter.domain);
-        }
-
-        for (let item of crawlUrls) {
-            this.addJob("MangaListener", {crawl_url: item, domain: this.getDomain(item)});
+        let crawlers = this.loadCrawlers(filter);
+        for (let item of crawlers) {
+            item.init(filter);
         }
     }
 
-    async getCrawlUrls(domain = null) {
+    loadCrawlers(filter = null) {
         let retVal = [];
-        if (domain) {
+        if (filter && filter.domain) {
+            var crawler = new (require(dir + '/Crawlers/impl/MangaCrawlers/' + filter.domain))();
+            retVal.push(crawler);
         } else {
-            let classes = this.loadClass(dir + '/Crawlers/impl/MangaCrawlers');
-            for (let item of classes) {
-                let urls = await item.getCrawlUrls();
-                retVal = retVal.concat(urls);
-            }
+            retVal = this.loadClass(dir + '/Crawlers/impl/MangaCrawlers');
         }
 
         return retVal;

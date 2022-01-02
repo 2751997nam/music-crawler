@@ -57,6 +57,16 @@ module.exports = {
       database: Env.get('DB_DATABASE', 'adonis')
     }
   },
+  mysql_vi: {
+    client: 'mysql',
+    connection: {
+      host: Env.get('DB_HOST_VI', 'localhost'),
+      port: Env.get('DB_PORT_VI', ''),
+      user: Env.get('DB_USER_VI', 'root'),
+      password: Env.get('DB_PASSWORD_VI', ''),
+      database: Env.get('DB_DATABASE_VI', 'adonis')
+    }
+  },
 
   /*
   |--------------------------------------------------------------------------

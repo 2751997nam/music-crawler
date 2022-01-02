@@ -1,29 +1,25 @@
-const { exec } = require('child_process');
-const Log = use('App/Utils/Log');
 const parser = require('xml2json');
+const BaseMangaCrawler = require("../../BaseMangaCrawler");
 
-class CrawlUrl {
+class MangaCrawler extends BaseMangaCrawler {
+    init() {
+        this.getCrawlUrls();
+    }
+
     getCrawlUrls = async () => {
         let crawlUrls = [];
         let url = 'https://manhwa18.net/sitemap.xml';
-        let xml = await new Promise((resolve, reject) => {
-            exec("curl --location --request GET '" + url + "'", function (error, stdout, stderr) {
-                if (error) {
-                    Log.error('error ', error);
-                    reject(stderr);
-                } else {
-                    resolve(stdout);
-                }
-            })
-        });
+        let xml = await this.getXml(url);
         let result = JSON.parse(parser.toJson(xml,{reversible: true}));
         let urls = result.urlset.url.slice(2);
         for (let item of urls) {
-            crawlUrls.push(item.loc.$t);
+            let crawlUrl = item.loc.$t;
+            crawlUrls.push(crawlUrl);
+            this.addJob('MangaListener', {crawl_url: crawlUrl, domain: this.getDomain(crawlUrl)}, {priority: 20});
         }
 
         return crawlUrls;
     }
 }
 
-module.exports = CrawlUrl;
+module.exports = MangaCrawler;

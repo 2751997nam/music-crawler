@@ -8,25 +8,28 @@ const Database = use("Database");
 const Log = use('App/Utils/Log');
 
 class MangaParser extends BaseParser {
+    getDB() {
+        return Database.connection('mysql_vi');
+    }
+
     async init(html, input) {
         const $ = cheerio.load(html);
         this.crawlUrl = input.crawl_url;
-        this.siteUrl = 'https://manhwa18.net/';
+        this.siteUrl = 'https://dichtruyentop.com/';
         return await this.parse($);
     }
 
     async parse($) {
-        let infoCover = $(".info-cover");
-        let info = $('.manga-info');
-        let image = $(infoCover).find("img");
+        let infoCover = $(".topslide .img_load .img_link");
+        let info = $('.comicinfo');
+        let image = $(infoCover).attr('data-bg');
         let data = {};
         if (image) {
-            data.image = $(image)
-                .attr("src");
-            data.image = this.siteUrl + data.image;
+            data.image = image;
         }
-        data.name = this.parseInfo($, info, "h3");
+        data.name = this.parseInfo($, info, ".comictitle");
         data.slug = util.slug(data.name);
+        data.alt_name = this.parseInfo($, info, ".lt_infocomic .cti_comic_other");
         data.authors = this.parseInfo(
             $,
             info,

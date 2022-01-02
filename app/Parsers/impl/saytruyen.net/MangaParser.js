@@ -8,53 +8,60 @@ const Database = use("Database");
 const Log = use('App/Utils/Log');
 
 class MangaParser extends BaseParser {
+    getDB() {
+        return Database.connection('mysql_vi');
+    }
+
+    table(table) {
+        return this.getDB().table(table);
+    }
+
     async init(html, input) {
         const $ = cheerio.load(html);
         this.crawlUrl = input.crawl_url;
-        this.siteUrl = 'https://manhwa18.net/';
+        this.siteUrl = 'https://saytruyen.net/';
         return await this.parse($);
     }
 
     async parse($) {
-        let infoCover = $(".info-cover");
-        let info = $('.manga-info');
-        let image = $(infoCover).find("img");
+        let infoCover = $(".summary_image .img-responsive");
+        let info = $('.profile-manga');
+        let image = $(infoCover).attr('src');
         let data = {};
         if (image) {
-            data.image = $(image)
-                .attr("src");
-            data.image = this.siteUrl + data.image;
+            data.image = image;
         }
-        data.name = this.parseInfo($, info, "h3");
+        data.name = this.parseInfo($, info, ".post-title h1");
         data.slug = util.slug(data.name);
+        data.alt_name = this.parseInfo($, info, ".summary_content .post-content .post-content_item:nth-child(3) .summary-content");
         data.authors = this.parseInfo(
             $,
             info,
-            "li:nth-child(3) a",
+            ".summary_content .post-content .post-content_item:nth-child(4) .author-content a",
             "multiple"
         );
         data.categories = this.parseInfo(
             $,
             info,
-            "li:nth-child(4) a",
+            ".summary_content .post-content .post-content_item:nth-child(8) .author-content a",
             "multiple"
         );
-        let status = this.parseInfo($, info, "li:nth-child(5) a");
-        data.status = status == 'Completed' ? 'COMPLETED' : 'ACTIVE';
-        data.translators = this.parseInfo($, info, "li:nth-child(6) a", 'multiple');
-        let view = this.parseInfo($, info, 'li:nth-child(7)');
-        view = view.replace('Views: ', '').trim();
+        let status = this.parseInfo($, info, ".summary_content .post-content .post-content_item:nth-child(7) .summary-content");
+        data.status = status == 'OnGoing' ? 'ACTIVE' : 'COMPLETED';
+        data.translators = [];
+        let view = this.parseInfo($, info, '.summary_content .post-content .post-content_item:nth-child(5) .summary-content');
+        view = view.trim();
         data.view = view;
-        let description = $('.summary-content');
+        let description = $('.c-page-content .description-summary .summary__content');
         if (description) {
             data.description = $(description).html();
         }
         data.chapters = [];
-        let listChapters = $('ul.list-chapters a');
+        let listChapters = $('.list-chapter ul.box-list-chapter li.wp-manga-chapter');
         if (listChapters) {
             let chapters = [];
             listChapters.each((index, element) => {
-                let ele = $(element).find('li .chapter-name');
+                let ele = $(element).find('a');
                 if (ele) {
                     let name = data.name + ' ' + $(ele).text();
                     chapters.push({
@@ -86,7 +93,7 @@ class MangaParser extends BaseParser {
     }
 
     async saveData(data) {
-        let manga = await Manga.query().where((query) => {
+        let manga = await Manga.DBConnection('mysql_vi').query().where((query) => {
             query.where('crawl_url', this.crawlUrl)
                 .orWhere('slug', data.slug);
         }).first();
@@ -101,7 +108,7 @@ class MangaParser extends BaseParser {
             manga.description = data.description;
             manga.crawl_url = data.crawl_url;
             manga.view = data.view;
-            await manga.save();
+            await manga.DBConnection('mysql_vi').save();
             for (let item of data.categories) {
                 await this.saveRelation(manga.id, item, 'category', 'category_n_manga', 'category_id');
             }
@@ -129,7 +136,7 @@ class MangaParser extends BaseParser {
         let newChapters = [];
 
         try {
-            let ignoreChapters = await Database.table('chapter').whereIn(checkField, fields).where('manga_id', manga.id).select(checkField);
+            let ignoreChapters = await this.table('chapter').whereIn(checkField, fields).where('manga_id', manga.id).select(checkField);
             let ignoreFields = ignoreChapters.map(item => item[checkField]);
             let ignoreUrlFields = {};
             for (let field of ignoreFields) {
@@ -154,38 +161,38 @@ class MangaParser extends BaseParser {
         Log.info('newChapters ', newChapters);
         for (let item of newChapters) {
             item.manga_id = manga.id;
-            await Database.table('chapter').insert(item);
+            await this.table('chapter').insert(item);
         }
 
         return newChapters;
     }
 
     async saveOneToManyRelation(mangaId, data, table) {
-        let obj = await Database.table(table)
+        let obj = await this.table(table)
             .where('crawl_url', data.crawl_url)
             .first();
         if (!obj) {
             data.manga_id = mangaId;
-            await Database.table(table).insert(data);
+            await this.table(table).insert(data);
         } else {
-            await Database.table(table).where('slug', data.slug).update(data);
+            await this.table(table).where('slug', data.slug).update(data);
         }
     }
 
     async saveRelation(mangaId, name, table, pivot, column) {
         let slug = util.slug(name);
-        let objID = await Database.table(table)
+        let objID = await this.table(table)
             .where('slug', slug)
             .first();
         if (!objID) {
-            objID = await Database.table(table).insert({
+            objID = await this.table(table).insert({
                 name: name,
                 slug: slug,
             });
         } else {
             objID = objID.id;
         }
-        let pivotObj = await Database.table(pivot)
+        let pivotObj = await this.table(pivot)
             .where('manga_id', mangaId)
             .where(column, objID)
             .first();
@@ -193,7 +200,7 @@ class MangaParser extends BaseParser {
             let data = {};
             data.manga_id = mangaId;
             data[column] = objID;
-            await Database.table(pivot).insert(data);
+            await this.table(pivot).insert(data);
         }
     }
 

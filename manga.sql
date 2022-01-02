@@ -124,11 +124,11 @@ INSERT INTO `author` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `author_n_manga`
+-- Cấu trúc bảng cho bảng `manga_n_author`
 --
 
-DROP TABLE IF EXISTS `author_n_manga`;
-CREATE TABLE IF NOT EXISTS `author_n_manga` (
+DROP TABLE IF EXISTS `manga_n_author`;
+CREATE TABLE IF NOT EXISTS `manga_n_author` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `author_id` int(11) NOT NULL,
   `manga_id` int(11) NOT NULL,
@@ -138,10 +138,10 @@ CREATE TABLE IF NOT EXISTS `author_n_manga` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Đang đổ dữ liệu cho bảng `author_n_manga`
+-- Đang đổ dữ liệu cho bảng `manga_n_author`
 --
 
-INSERT INTO `author_n_manga` (`id`, `author_id`, `manga_id`, `updated_at`, `created_at`) VALUES
+INSERT INTO `manga_n_author` (`id`, `author_id`, `manga_id`, `updated_at`, `created_at`) VALUES
 (1, 7, 8, '2020-07-16 17:23:13', '0000-00-00 00:00:00'),
 (2, 8, 8, '2020-07-16 17:23:13', '0000-00-00 00:00:00'),
 (3, 5, 7, '2020-07-16 17:23:13', '0000-00-00 00:00:00'),

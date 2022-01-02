@@ -12,7 +12,7 @@ class ChapterParser extends BaseParser {
         this.siteUrl = 'https://manhwa18.net/';
         this.crawlUrl = input.crawl_url;
         this.input = input;
-        return await this.parse($);
+        this.parse($);
     }
 
     async parse($) {
@@ -30,8 +30,7 @@ class ChapterParser extends BaseParser {
             }
         }
         if (images.length) {
-            let chapter = await this.saveChapter(images);
-            return [chapter];
+            await this.saveChapter(images);
         } else {
             Log.info('parse chapter error: ', this.crawlUrl);
         }
@@ -50,18 +49,7 @@ class ChapterParser extends BaseParser {
             await chapter.save();
         }
         Log.info('parsed chapter: ', chapter.name);
-        return chapter;
-    }
 
-    getOptionAfterParse() {
-        return {
-            priority: 1,
-            delay: 30000
-        }
-    }
-
-    getListenerAfterParse() {
-        return 'ImageListener2';
     }
 }
 

@@ -19,12 +19,18 @@ class BaseParser
 
     }
 
+    getOptionAfterParse() {
+        return {priority: 1};
+    }
+
     async afterParse(crawlItems) {
         let listener = this.getListenerAfterParse();
+        console.log(listener);
+        console.log(crawlItems.length);
         if (listener && crawlItems && crawlItems.length) {
             for (let item of crawlItems) {
                 item.domain = this.getDomain(item.crawl_url);
-                this.addJob(listener, item);
+                this.addJob(listener, item, this.getOptionAfterParse());
             }
         }
     }
@@ -35,8 +41,8 @@ class BaseParser
         return hostname;
     }
 
-    addJob(listener, data) {
-        QueueClient.addJob(listener, data, {priority: 1});
+    addJob(listener, data, option = {priority: 1}) {
+        QueueClient.addJob(listener, data, option);
     }
 }
 

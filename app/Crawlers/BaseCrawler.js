@@ -1,10 +1,9 @@
 "use strict";
 
-const Database = use("Database");
 const QueueClient = use('App/Utils/QueueClient');
 
 class BaseCrawler {
-    addJob(listener, data) {
+    addJob(listener, data, option = {priority: 100}) {
         QueueClient.addJob(listener, data, {priority: 100});
     }
 

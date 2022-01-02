@@ -20,6 +20,7 @@
 const { Ignitor } = require("@adonisjs/ignitor");
 const Log = require('./app/Utils/Log');
 const Redis = require('./app/Utils/Redis');
+global.__basedir = __dirname;
 
 new Ignitor(require("@adonisjs/fold"))
     .appRoot(__dirname)
@@ -34,6 +35,10 @@ const ListenerManager = require(__dirname + "/app/Listeners/ListenerManager");
 const mangaParser = require(__dirname + '/app/Parsers/impl/manhwa18.net/ChapterParser');
 Redis.del('bull*').then(function () {
     ListenerManager.init();
+});
+
+process.on('uncaughtException', (error) => {
+    console.log(error);
 });
 
 schedule.scheduleJob('0 */1 * * *', function(){
