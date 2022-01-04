@@ -7,6 +7,7 @@ class MangaCrawler extends BaseMangaCrawler {
     }
 
     getCrawlUrls = async () => {
+        return;
         let crawlUrls = [];
         let url = 'https://manhwa18.net/sitemap.xml';
         let xml = await this.getXml(url);
