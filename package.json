@@ -27,6 +27,7 @@
     "@adonisjs/session": "^1.0.27",
     "@adonisjs/shield": "^1.0.8",
     "axios": "^0.19.2",
+    "btoa": "^1.2.1",
     "bull": "^4.1.1",
     "bullmq": "^1.57.0",
     "cheerio": "^1.0.0-rc.3",

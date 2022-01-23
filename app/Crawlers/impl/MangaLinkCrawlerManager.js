@@ -9,7 +9,7 @@ const Helpers = use('Helpers');
 const dir = Helpers.appRoot() + '/app';
 const Util = use('App/Utils/util');
 
-class MangaCrawlerManager extends BaseCrawler {
+class MangaLinkCrawlerManager extends BaseCrawler {
     async init(filter = null) {
         let crawlers = this.loadCrawlers(filter);
         for (let item of crawlers) {
@@ -20,10 +20,10 @@ class MangaCrawlerManager extends BaseCrawler {
     loadCrawlers(filter = null) {
         let retVal = [];
         if (filter && filter.domain) {
-            var crawler = new (require(dir + '/Crawlers/impl/MangaCrawlers/' + filter.domain))();
+            var crawler = new (require(dir + '/Crawlers/impl/MangaLinkCrawlers/' + filter.domain))();
             retVal.push(crawler);
         } else {
-            retVal = this.loadClass(dir + '/Crawlers/impl/MangaCrawlers');
+            retVal = this.loadClass(dir + '/Crawlers/impl/MangaLinkCrawlers');
         }
 
         return retVal;
@@ -43,4 +43,4 @@ class MangaCrawlerManager extends BaseCrawler {
     };
 }
 
-module.exports = MangaCrawlerManager;
+module.exports = MangaLinkCrawlerManager;

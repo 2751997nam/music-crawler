@@ -4,12 +4,13 @@ const Config = use('Config');
 const got = require('got');
 const util = require('../../Utils/util');
 const Manga = use('App/Models/Manga');
-const MangaCrawlerManager = use('App/Crawlers/impl/MangaCrawlerManager');
+const MangaCrawler = use('App/Crawlers/impl/MangaCrawler');
+
 
 class CrawlMangaController {
     async crawl({request, response}) {
         const query = request._qs;
-        const crawler = new MangaCrawlerManager();
+        const crawler = new MangaCrawler();
         let filter = {};
         if (query.all) {
             filter.all = query.all;
@@ -19,6 +20,10 @@ class CrawlMangaController {
             if (crawlUrls) {
                 filter.crawlUrls = crawlUrls;
             }
+        }
+
+        if (query.domain) {
+            filter.domain = query.domain;
         }
 
         crawler.init(filter);

@@ -24,14 +24,16 @@ class BaseParser
     }
 
     async afterParse(crawlItems) {
-        let listener = this.getListenerAfterParse();
-        console.log(listener);
-        console.log(crawlItems.length);
-        if (listener && crawlItems && crawlItems.length) {
-            for (let item of crawlItems) {
-                item.domain = this.getDomain(item.crawl_url);
-                this.addJob(listener, item, this.getOptionAfterParse());
+        try {
+            let listener = this.getListenerAfterParse();
+            if (listener && crawlItems && crawlItems.length) {
+                for (let item of crawlItems) {
+                    item.domain = this.getDomain(item.crawl_url);
+                    this.addJob(listener, item, this.getOptionAfterParse());
+                }
             }
+        } catch (error) {
+            console.log('error', error);            
         }
     }
 

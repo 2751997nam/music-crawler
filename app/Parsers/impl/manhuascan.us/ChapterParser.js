@@ -9,24 +9,27 @@ const Log = use('App/Utils/Log');
 class ChapterParser extends BaseChapterParser {
     async init(html, input) {
         const $ = cheerio.load(html);
-        this.siteUrl = 'https://manhwa18.net/';
+        this.siteUrl = 'https://manhuascan.us/';
         this.crawlUrl = input.crawl_url;
         this.input = input;
         return await this.parse($);
     }
 
     async parse($) {
-        let elements = $('.chapter-img');
+        let elements = $('#readerarea > img');
         let images = [];
         if (elements) {
             let index = 0;
             for (let element of elements) {
-                let image = {
-                    image_url: $(element).attr('src'),
-                    original_url: $(element).attr('data-original'),
+                let imageUrl = $(element).attr('src');
+                if (imageUrl) {
+                    let image = {
+                        image_url: imageUrl,
+                        original_url: imageUrl,
+                    }
+                    images.push(image);
                 }
 
-                images.push(image);
             }
         }
         if (images.length) {
@@ -38,22 +41,6 @@ class ChapterParser extends BaseChapterParser {
         } else {
             Log.info('parse chapter error: ', this.crawlUrl);
         }
-    }
-
-    async saveChapter(images) {
-        let chapter = await Chapter.query()
-            .where((query) => {
-                query.where('crawl_url', this.crawlUrl)
-                    .orWhere('slug', this.input.slug);
-            })
-            .where('manga_id', this.input.manga_id).select('*').first();
-        if (chapter) {
-            chapter.images = JSON.stringify(images);
-            chapter.status = 'ACTIVE';
-            await chapter.save();
-        }
-        Log.info('parsed chapter: ', chapter.name);
-        return chapter;
     }
 }
 
