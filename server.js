@@ -32,7 +32,6 @@ const schedule = require('node-schedule');
 const MangaLinkCrawlerManager = require(__dirname + "/app/Crawlers/impl/MangaLinkCrawlerManager");
 const ListenerManager = require(__dirname + "/app/Listeners/ListenerManager");
 
-const mangaParser = require(__dirname + '/app/Parsers/impl/manhwa18.net/ChapterParser');
 Redis.del('bull*').then(function () {
     ListenerManager.init();
 });
@@ -48,12 +47,15 @@ schedule.scheduleJob('30 */12 * * *', function(){
 const MangaCrawler = require(__dirname + '/app/Crawlers/impl/MangaCrawler');
 const mangaCrawler = new MangaCrawler();
 
-schedule.scheduleJob('0 */1 * * *', function(){
+schedule.scheduleJob('0 */2 * * *', function(){
     mangaCrawler.init({});
 });
 
 const ImageCrawler = require(__dirname + '/app/Crawlers/impl/ImageCrawler');
 const imageCrawler = new ImageCrawler();
+const MangaAvatarCrawler = require(__dirname + '/app/Crawlers/impl/MangaAvatarCrawler');
+const mangaAvatarCrawler = new MangaAvatarCrawler();
 setTimeout(() => {
     imageCrawler.init(); 
+    mangaAvatarCrawler.init();
 }, 3000);

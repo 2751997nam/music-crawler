@@ -22,10 +22,13 @@ class ListenerManager {
                 );
                 Log.info(job.name + ' ', job.data.crawl_url);
                 let result = await listener.init(job.data);
-                try {
-                    await parserManger.init(result, job.data, listener.getParser());
-                } catch (error) {
-                    Log.info('error', error);                    
+                let parser = listener.getParser();
+                if (parser) {
+                    try {
+                        await parserManger.init(result, job.data, parser);
+                    } catch (error) {
+                        Log.info('error', error);                    
+                    }
                 }
             }, {
                 limiter: {

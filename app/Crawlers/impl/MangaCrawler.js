@@ -10,7 +10,7 @@ class MangaCrawler extends BaseCrawler {
     async init(filter = null) {
         let links = [];
         if (filter && filter.crawlUrls && filter.crawlUrls.length > 0) {
-            for (let url of crawlUrls) {
+            for (let url of filter.crawlUrls) {
                 links.push({
                     crawl_url: url
                 });

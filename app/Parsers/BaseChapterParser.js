@@ -1,10 +1,12 @@
 "use strict";
+const axios = require("axios");
 const cheerio = require("cheerio");
 const util = use("App/Utils/util");
 const BaseParser = use("App/Parsers/BaseParser");
 const Chapter = use("App/Models/Chapter");
 const Database = use("Database");
 const Log = use('App/Utils/Log');
+const Config = use("Config");
 
 class BaseChapterParser extends BaseParser {
     async saveChapter(images) {
@@ -18,9 +20,18 @@ class BaseChapterParser extends BaseParser {
             chapter.images = JSON.stringify(images);
             chapter.status = 'ACTIVE';
             await chapter.save();
+            this.syncChapter(chapter);
         }
         Log.info('parsed chapter: ', chapter.name);
         return chapter;
+    }
+
+    async syncChapter(chapter) {
+        chapter.token = Config.get('sync.sync_token');
+        axios.post(Config.get('sync.sync_url') + '/api/save-chapter', chapter).then(res => {
+            Log.info('sync chapter res: ',  JSON.stringify(res.data))
+            Log.info('sync chapter ', chapter.name);
+        });;
     }
 }
 

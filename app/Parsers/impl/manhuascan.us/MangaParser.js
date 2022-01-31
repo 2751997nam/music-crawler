@@ -62,7 +62,7 @@ class MangaParser extends BaseMangaParser {
 
         let description = $(info).find('.entry-content p');
         if (description) {
-            data.description = $(description).text();
+            data.description = $(description).text().trim();
         }
         data.chapters = [];
         let listChapters = $('#chapterlist li');

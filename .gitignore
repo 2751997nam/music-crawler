@@ -15,4 +15,5 @@ database/*.sqlite
 .history
 .idea
 logs/*
+sql-logs/
 public/manga

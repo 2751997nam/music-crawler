@@ -6,16 +6,24 @@ const Manga = use("App/Models/Manga");
 const Chapter = use("App/Models/Chapter");
 const Database = use("Database");
 const Log = use('App/Utils/Log');
+const Config = use("Config");
+const axios = require('axios');
 
 class BaseMangaParser extends BaseParser {
     async saveManga(manga, data) {
-        let keys = ['name', 'slug', 'status', 'image', 'description', 'view', 'alt_name'];
+        let keys = ['status', 'description', 'alt_name'];
+        let isUpdate = false;
         for (let key of keys) {
             if (manga[key] != data[key]) {
                 manga[key] = data[key];
+                isUpdate = true;
             }
         }
-        await manga.save();
+        if (isUpdate) {
+            await manga.save();
+        }
+
+        return isUpdate;
     }
 
     async saveData(data) {
@@ -24,7 +32,10 @@ class BaseMangaParser extends BaseParser {
                 .orWhere('slug', data.slug);
         }).first();
         if (manga) {
-            await this.saveManga(manga, data);
+            let isUpdate = await this.saveManga(manga, data);
+            if (isUpdate) {
+                this.syncManga(manga);
+            }
         } else {
             manga = new Manga();
             manga.name = data.name;
@@ -45,6 +56,8 @@ class BaseMangaParser extends BaseParser {
             for (let item of data.translators) {
                 await this.saveRelation(manga.id, item, 'translator', 'manga_n_translator', 'translator_id');
             }
+            data.id = manga.id;
+            this.syncManga(data);
         }
         let chapters = await this.saveChapters(manga, data);
 
@@ -55,6 +68,29 @@ class BaseMangaParser extends BaseParser {
         Log.info('parsed manga: ', manga.name);
 
         return chapters;
+    }
+
+    async syncManga(data) {
+        let manga = {
+            id: data.id,
+            name: data.name,
+            alt_name: data.alt_name,
+            slug: data.slug,
+            image: data.image,
+            status: data.status,
+            description: data.description,
+            crawl_url: data.crawl_url,
+            view: data.view,
+            categories: data.categories,
+            authors: data.authors,
+            translators: data.translators,
+        };
+        manga.token = Config.get('sync.sync_token');
+        let syncUrl = Config.get('sync.sync_url') + '/api/save-manga';
+        axios.post(syncUrl, manga).then(res => {
+            Log.info('sync manga res: ',  JSON.stringify(res.data))
+            Log.info('sync manga ', manga.name);
+        });
     }
 
     async getNewChapters (manga, chapters, checkField) {
@@ -143,7 +179,7 @@ class BaseMangaParser extends BaseParser {
                 retVal = $(elements).text();
             } else if (elements) {
                 elements.each((index, element) => {
-                    retVal.push($(element).html());
+                    retVal.push($(element).text().trim());
                 });
             }
         } catch (error) {

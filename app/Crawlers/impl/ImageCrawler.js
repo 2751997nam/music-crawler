@@ -26,7 +26,7 @@ class ImageCrawler extends BaseCrawler {
         }
 
         query.join('manga', 'manga.id', 'chapter.manga_id');
-        query.where('manga.view', '>=', 1000);
+        // query.where('manga.view', '>=', 1000);
         // query.orderBy('manga.view', 'desc');
         query.orderBy('chapter.id', 'asc');
         query.select(['chapter.*', 'manga.name as manga_name']);
@@ -38,7 +38,7 @@ class ImageCrawler extends BaseCrawler {
         let tries = 0;
         
         const crawl = async (interval) => {
-            let chapters = await query.where('parse_status', status).where('chapter.id', '>=', lastId).limit(limit);
+            let chapters = await query.where('chapter.status', 'ACTIVE').where('parse_status', status).where('chapter.id', '>=', lastId).limit(limit);
             hasNext = false;
 
             for (let item of chapters) {
@@ -69,7 +69,7 @@ class ImageCrawler extends BaseCrawler {
 
         let interval = setInterval(async () => {
             await crawl(interval);
-        }, 45000);
+        }, 60000);
     }
 }
 

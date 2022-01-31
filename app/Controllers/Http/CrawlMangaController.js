@@ -5,6 +5,7 @@ const got = require('got');
 const util = require('../../Utils/util');
 const Manga = use('App/Models/Manga');
 const MangaCrawler = use('App/Crawlers/impl/MangaCrawler');
+const Database = use('Database');
 
 
 class CrawlMangaController {
@@ -17,6 +18,11 @@ class CrawlMangaController {
         }
         else if (query.manga_ids) {
             const crawlUrls = await Manga.query().whereIn('id', query.manga_ids.split(',')).pluck('crawl_url');
+            if (crawlUrls) {
+                filter.crawlUrls = crawlUrls;
+            }
+        } else if (query.ids) {
+            const crawlUrls = await Database.table('manga_link').whereIn('id', query.ids.split(',')).pluck('crawl_url');
             if (crawlUrls) {
                 filter.crawlUrls = crawlUrls;
             }

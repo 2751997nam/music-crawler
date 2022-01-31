@@ -11,45 +11,50 @@ class MangaParser extends BaseMangaParser {
     async init(html, input) {
         const $ = cheerio.load(html);
         this.crawlUrl = input.crawl_url;
-        this.siteUrl = 'https://manhwa18.net/';
+        this.siteUrl = 'https://manhwa18.com/';
         return await this.parse($);
     }
 
     async parse($) {
-        let infoCover = $(".info-cover");
-        let info = $('.manga-info');
-        let image = $(infoCover).find("img");
+        let infoCover = $(".series-cover");
+        let info = $('.series-information');
+        let image = $(infoCover).find(".img-in-ratio");
         let data = {};
         if (image) {
-            data.image = $(image)
-                .attr("src");
-            data.image = this.siteUrl + data.image;
+            let style = $(image)
+                .attr("style");
+            let matches = style.match(/url\(\'(.*)\'\)/g);
+            if (matches && matches.length > 1) {
+                data.image = matches[1];
+            }
         }
-        data.name = this.parseInfo($, info, "h3");
-        let altName = this.parseInfo($, info, 'li:nth-child(1)');
-        altName = altName.replace('Other names: ', '').trim();
+        data.name = $(".series-name").text().trim();
+        let altName = this.parseInfo($, info, '.info-item:nth-child(1) .info-value');
         data.alt_name = altName;
         data.slug = util.slug(data.name);
         data.authors = this.parseInfo(
             $,
             info,
-            "li:nth-child(3) a",
+            ".info-item:nth-child(4) .info-value a",
             "multiple"
         );
         data.categories = this.parseInfo(
             $,
             info,
-            "li:nth-child(4) a",
+            ".info-item:nth-child(3) .info-value a",
             "multiple"
         );
         if (data.categories.length == 1 && data.categories[0] == 'Manhwa') {
             return [];
         }
-        let status = this.parseInfo($, info, "li:nth-child(5) a");
-        data.status = status == 'Completed' ? 'COMPLETED' : 'ACTIVE';
-        data.translators = this.parseInfo($, info, "li:nth-child(6) a", 'multiple');
-        let view = this.parseInfo($, info, 'li:nth-child(7)');
-        view = view.replace('Views: ', '').trim();
+        let status = this.parseInfo($, info, ".info-item:nth-child(5) .info-value a");
+        data.status = status == 'On going' ? 'ACTIVE' : 'COMPLETED';
+        data.translators = [];
+        let translator = $(".fantrans-name").text().trim();
+        if (translator) {
+            data.translators.push(translator);
+        }
+        let view = $('.statistic-list .statistic-item:nth-child(3) .statistic-value').text().trim();
         data.view = view;
         let description = $('.summary-content');
         if (description) {
@@ -66,7 +71,7 @@ class MangaParser extends BaseMangaParser {
                     chapters.push({
                         name: name,
                         slug: util.slug(name),
-                        crawl_url: this.siteUrl + $(element).attr('href'),
+                        crawl_url: $(element).attr('href'),
                         sorder: listChapters.length - index - 1,
                     });
                 }

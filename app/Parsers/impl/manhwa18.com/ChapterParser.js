@@ -9,21 +9,21 @@ const Log = use('App/Utils/Log');
 class ChapterParser extends BaseChapterParser {
     async init(html, input) {
         const $ = cheerio.load(html);
-        this.siteUrl = 'https://manhwa18.net/';
+        this.siteUrl = 'https://manhwa18.com/';
         this.crawlUrl = input.crawl_url;
         this.input = input;
         return await this.parse($);
     }
 
     async parse($) {
-        let elements = $('.chapter-img');
+        let elements = $('#chapter-content img');
         let images = [];
         if (elements) {
             let index = 0;
             for (let element of elements) {
                 let image = {
-                    image_url: $(element).attr('src'),
-                    original_url: $(element).attr('data-original'),
+                    image_url: $(element).attr('data-src'),
+                    original_url: $(element).attr('data-src'),
                 }
 
                 images.push(image);
