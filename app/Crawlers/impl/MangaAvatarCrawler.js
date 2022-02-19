@@ -19,7 +19,7 @@ class MangaAvatarCrawler extends BaseCrawler {
         crawl();
         setInterval(async () => {
             crawl();
-        }, 15000);
+        }, 60000);
     }
 }
 

@@ -26,8 +26,11 @@ class MangaCrawler extends BaseCrawler {
                 if (filter.status) {
                     status = filter.status;
                 }
+                query.where('status', status);
+            } else {
+                query.whereIn('status', ['ACTIVE', 'COMPLETED']);
             }
-            links = await query.where('status', status).orderBy('sorder', 'desc').select('*');
+            links = await query.orderBy('sorder', 'desc').select('*');
         }
         for (let item of links) {
             item.domain = this.getDomain(item.crawl_url);

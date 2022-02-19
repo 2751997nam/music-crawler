@@ -40,14 +40,14 @@ process.on('uncaughtException', (error) => {
     console.log(error);
 });
 const mangaLinkCrawlerManager = new MangaLinkCrawlerManager();
-schedule.scheduleJob('30 */12 * * *', function(){
+schedule.scheduleJob('30 */6 * * *', function(){
     mangaLinkCrawlerManager.init({});
 });
 
 const MangaCrawler = require(__dirname + '/app/Crawlers/impl/MangaCrawler');
 const mangaCrawler = new MangaCrawler();
 
-schedule.scheduleJob('0 */2 * * *', function(){
+schedule.scheduleJob('0 */1 * * *', function(){
     mangaCrawler.init({});
 });
 

@@ -11,68 +11,60 @@ class MangaParser extends BaseMangaParser {
     async init(html, input) {
         const $ = cheerio.load(html);
         this.crawlUrl = input.crawl_url;
-        this.siteUrl = 'https://manhwa18.net/';
+        this.siteUrl = 'https://lewdmanhwa.com/';
         return await this.parse($);
     }
 
     async parse($) {
-        let infoCover = $(".info-cover");
-        let info = $('.manga-info');
+        let infoCover = $(".post-thumbnail");
+        let info = $('.comics-info');
         let image = $(infoCover).find("img");
         let data = {};
         if (image) {
             data.image = $(image)
                 .attr("src");
-            data.image = this.siteUrl + data.image;
+            data.image = data.image;
         }
-        data.name = this.parseInfo($, info, "h3");
-        let altName = this.parseInfo($, info, 'li:nth-child(2)');
-        altName = altName.replace('Other names: ', '').trim();
-        data.alt_name = altName;
+        data.name = $('.entry-title').text().trim();
+        data.alt_name = '';
         data.slug = util.slug(data.name);
         data.authors = this.parseInfo(
             $,
             info,
-            "li:nth-child(3) a",
+            ".author a",
             "multiple"
         );
         data.categories = this.parseInfo(
             $,
             info,
-            "li:nth-child(4) a",
+            ".tags a",
             "multiple"
         );
-        if (data.categories.length == 1 && data.categories[0] == 'Manhwa') {
-            return [];
-        }
-        let status = this.parseInfo($, info, "li:nth-child(5) a");
-        data.status = status == 'Completed' ? 'COMPLETED' : 'ACTIVE';
-        data.translators = this.parseInfo($, info, "li:nth-child(6) a", 'multiple');
-        let view = this.parseInfo($, info, 'li:nth-child(7)');
-        view = view.replace('Views: ', '').trim();
-        data.view = view;
-        let description = $('.summary-content');
+        data.status = 'ACTIVE';
+        data.translators = [];
+        data.view = 0;
+        let description = $('.entry-content');
         if (description) {
             data.description = $(description).text().trim();
         }
         data.chapters = [];
-        let listChapters = $('ul.list-chapters a');
+        let listChapters = $('.chapter-list-items a');
         if (listChapters) {
             let chapters = [];
             listChapters.each((index, element) => {
-                let ele = $(element).find('li .chapter-name');
+                let ele = $(element).find('.chapter-name');
                 if (ele) {
                     let name = data.name + ' ' + $(ele).text();
                     chapters.push({
                         name: name,
                         slug: util.slug(name),
-                        crawl_url: this.siteUrl + $(element).attr('href'),
-                        sorder: listChapters.length - index - 1,
+                        crawl_url: $(element).attr('href'),
+                        sorder: index,
                     });
                 }
             })
-            data.chapters = chapters.reverse();
         }
+
         if (data) {
             data.crawl_url = this.crawlUrl;
             return await this.saveData(data);

@@ -56,7 +56,11 @@ class ImageCrawler extends BaseCrawler {
             offset += limit;
 
             if (!hasNext) {
-                clearInterval(interval);
+                if (lastId) {
+                    lastId = 0;
+                } else {
+                    clearInterval(interval);
+                }
             }
 
             if (tries >= 5) {

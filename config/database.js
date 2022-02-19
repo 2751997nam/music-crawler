@@ -56,7 +56,6 @@ module.exports = {
       password: Env.get('DB_PASSWORD', ''),
       database: Env.get('DB_DATABASE', 'adonis')
     },
-    debug: false
   },
   mysql_vi: {
     client: 'mysql',

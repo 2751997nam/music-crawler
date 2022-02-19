@@ -26,6 +26,11 @@ class CrawlMangaController {
             if (crawlUrls) {
                 filter.crawlUrls = crawlUrls;
             }
+        } else if (query.fromId) {
+            const crawlUrls = await Database.table('manga_link').where('id', '>=', query.fromId).pluck('crawl_url');
+            if (crawlUrls) {
+                filter.crawlUrls = crawlUrls;
+            }
         }
 
         if (query.domain) {

@@ -8,17 +8,22 @@ const Database = use("Database");
 const Log = use('App/Utils/Log');
 const Config = use("Config");
 const axios = require('axios');
+const fse = require('fs-extra');
 
 class BaseMangaParser extends BaseParser {
     async saveManga(manga, data) {
-        let keys = ['status', 'description', 'alt_name'];
+        let keys = ['description', 'alt_name'];
         let isUpdate = false;
         for (let key of keys) {
-            if (manga[key] != data[key]) {
+            if (!manga[key] && data[key]) {
                 manga[key] = data[key];
                 isUpdate = true;
             }
         }
+        // if (data.status != manga.status && data.status == 'COMPLETED') {
+        //     manga.status = data.status;
+        //     isUpdate = true;
+        // }
         if (isUpdate) {
             await manga.save();
         }
@@ -31,17 +36,18 @@ class BaseMangaParser extends BaseParser {
             query.where('crawl_url', this.crawlUrl)
                 .orWhere('slug', data.slug);
         }).first();
+        let syncId = null;
         if (manga) {
             let isUpdate = await this.saveManga(manga, data);
             if (isUpdate) {
-                this.syncManga(manga);
+                syncId = await this.syncManga(manga);
             }
         } else {
             manga = new Manga();
             manga.name = data.name;
             manga.alt_name = data.alt_name;
             manga.slug = data.slug;
-            manga.image = data.image;
+            manga.image = await this.downloadImage(data.image, data);
             manga.status = data.status;
             manga.description = data.description;
             manga.crawl_url = data.crawl_url;
@@ -57,17 +63,59 @@ class BaseMangaParser extends BaseParser {
                 await this.saveRelation(manga.id, item, 'translator', 'manga_n_translator', 'translator_id');
             }
             data.id = manga.id;
-            this.syncManga(data);
+            data.image = manga.image;
+            syncId = await this.syncManga(data);
         }
         let chapters = await this.saveChapters(manga, data);
 
         for (let i = 0; i < chapters.length; i++) {
             chapters[i].manga_name = manga.name;
+            chapters[i].sync_manga_id = syncId;
         }
 
         Log.info('parsed manga: ', manga.name);
 
         return chapters;
+    }
+
+    async downloadImage (url, manga) {
+        let basePath = '/images/avatars/' + manga.slug + '.jpg';
+        let path = './public' + basePath;
+
+        axios('https://cdn.toptoon69.com/download', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            data: {
+                url: url,
+                path: basePath,
+                token: Config.get('sync.sync_token')
+            }
+        })
+
+        axios({
+            url,
+            responseType: 'stream',
+        }).then(async response => {
+            fse.outputFileSync(path, '');
+            return new Promise((resolve, reject) => {
+                response.data.pipe(fse.createWriteStream(path, {
+                    flags: 'w'
+                }))
+                .on('error',(error)=>{
+                    console.log(error)
+                    reject(false);
+                })
+                .on('finish', function (err) {
+                    resolve(true);
+                });
+            })
+        }).catch(error => {
+            console.log(error);
+            Log.info('downloadImage ', error);
+            return false;
+        });
+
+        return basePath;
     }
 
     async syncManga(data) {
@@ -87,10 +135,16 @@ class BaseMangaParser extends BaseParser {
         };
         manga.token = Config.get('sync.sync_token');
         let syncUrl = Config.get('sync.sync_url') + '/api/save-manga';
-        axios.post(syncUrl, manga).then(res => {
+        return axios.post(syncUrl, manga).then(res => {
             Log.info('sync manga res: ',  JSON.stringify(res.data))
             Log.info('sync manga ', manga.name);
-        });
+            if (res.data.status && res.data.status == 'successful' && res.data.result) {
+                return res.data.result.id;
+            }
+        }).catch(error => {
+            console.log('sync error', error);
+            return null;
+        })
     }
 
     async getNewChapters (manga, chapters, checkField) {
@@ -125,7 +179,10 @@ class BaseMangaParser extends BaseParser {
     async saveChapters (manga, data) {
         let newChapters = await this.getNewChapters(manga, data.chapters, 'crawl_url');
         newChapters = await this.getNewChapters(manga, newChapters, 'slug');
-        Log.info('newChapters ', newChapters);
+        newChapters = await this.getNewChapters(manga, newChapters, 'sorder');
+        if (newChapters.length) {
+            Log.info('newChapters ', newChapters);
+        }
         for (let item of newChapters) {
             item.manga_id = manga.id;
             await Database.table('chapter').insert(item);

@@ -27,6 +27,9 @@ class BaseChapterParser extends BaseParser {
     }
 
     async syncChapter(chapter) {
+        if (this.input.sync_manga_id) {
+            chapter.manga_id = this.input.sync_manga_id;
+        }
         chapter.token = Config.get('sync.sync_token');
         axios.post(Config.get('sync.sync_url') + '/api/save-chapter', chapter).then(res => {
             Log.info('sync chapter res: ',  JSON.stringify(res.data))
