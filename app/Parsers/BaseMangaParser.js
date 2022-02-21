@@ -39,7 +39,7 @@ class BaseMangaParser extends BaseParser {
         let syncId = null;
         if (manga) {
             let isUpdate = await this.saveManga(manga, data);
-            if (isUpdate) {
+            if (isUpdate && Config.get('sync.enable')) {
                 syncId = await this.syncManga(manga);
             }
         } else {
@@ -64,7 +64,9 @@ class BaseMangaParser extends BaseParser {
             }
             data.id = manga.id;
             data.image = manga.image;
-            syncId = await this.syncManga(data);
+            if (Config.get('sync.enable')) {
+                syncId = await this.syncManga(data);
+            }
         }
         let chapters = await this.saveChapters(manga, data);
 
@@ -82,7 +84,7 @@ class BaseMangaParser extends BaseParser {
         let basePath = '/images/avatars/' + manga.slug + '.jpg';
         let path = './public' + basePath;
 
-        axios('https://cdn.toptoon69.com/download', {
+        axios(Config.get('sync.download_image_url'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             data: {

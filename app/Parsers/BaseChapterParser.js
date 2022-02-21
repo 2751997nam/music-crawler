@@ -20,7 +20,9 @@ class BaseChapterParser extends BaseParser {
             chapter.images = JSON.stringify(images);
             chapter.status = 'ACTIVE';
             await chapter.save();
-            this.syncChapter(chapter);
+            if (Config.get('sync.enable')) {
+                this.syncChapter(chapter);
+            }
         }
         Log.info('parsed chapter: ', chapter.name);
         return chapter;

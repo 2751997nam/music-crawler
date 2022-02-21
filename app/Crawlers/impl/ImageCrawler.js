@@ -10,6 +10,7 @@ const Redis = require('../../Utils/Redis');
 
 class ImageCrawler extends BaseCrawler {
     async init(filter = null) {
+        return;
         let query = Database.table("chapter");
         let status = 'PENDING';
         if (filter && !filter.all) {

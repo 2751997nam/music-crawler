@@ -50,12 +50,3 @@ const mangaCrawler = new MangaCrawler();
 schedule.scheduleJob('0 */1 * * *', function(){
     mangaCrawler.init({});
 });
-
-const ImageCrawler = require(__dirname + '/app/Crawlers/impl/ImageCrawler');
-const imageCrawler = new ImageCrawler();
-const MangaAvatarCrawler = require(__dirname + '/app/Crawlers/impl/MangaAvatarCrawler');
-const mangaAvatarCrawler = new MangaAvatarCrawler();
-setTimeout(() => {
-    imageCrawler.init(); 
-    mangaAvatarCrawler.init();
-}, 3000);
