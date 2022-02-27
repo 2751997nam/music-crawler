@@ -46,7 +46,7 @@ class MangaParser extends BaseMangaParser {
             return [];
         }
         let status = this.parseInfo($, info, "li:nth-child(5) a");
-        data.status = status == 'Completed' ? 'COMPLETED' : 'ACTIVE';
+        data.status = 'ACTIVE';
         data.translators = this.parseInfo($, info, "li:nth-child(6) a", 'multiple');
         let view = this.parseInfo($, info, 'li:nth-child(7)');
         view = view.replace('Views: ', '').trim();

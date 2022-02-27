@@ -1,0 +1,1 @@
+ssh root@toptoon69.com -t 'cd /home/mymanga && git pull && pm2 restart mymanga'
