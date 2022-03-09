@@ -235,7 +235,7 @@ class BaseMangaParser extends BaseParser {
         try {
             let elements = $(container).find(selector);
             if (type == "single" && elements) {
-                retVal = $(elements).text();
+                retVal = $(elements).text().trim();
             } else if (elements) {
                 elements.each((index, element) => {
                     retVal.push($(element).text().trim());
