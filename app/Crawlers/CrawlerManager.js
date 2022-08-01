@@ -1,4 +1,7 @@
 'use strict'
+
+const safeRequire = require("../Utils/SafeRequire");
+
 const Helpers = use('Helpers');
 const dir = Helpers.appRoot() + '/app';
 const Util = use('App/Utils/util');
@@ -13,7 +16,9 @@ class CrawlerManager
         var classPaths = Util.browseFiles(dir);
         classPaths.forEach(function (classPath) {
             if (classPath.indexOf(".js") === (classPath.length - 3)) {
-                var crawler = new (require(classPath))();
+                
+
+                var crawler = new (safeRequire(classPath))();
                 crawler.init();
             }
         });

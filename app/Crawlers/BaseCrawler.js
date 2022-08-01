@@ -7,10 +7,6 @@ class BaseCrawler {
         QueueClient.addJob(listener, data, {priority: 100});
     }
 
-    addJobImage(listener, data, option = {priority: 100}) {
-        QueueClient.addJobImage(listener, data, {priority: 100});
-    }
-
     getDomain(url) {
         let { hostname } = new URL(url);
         hostname = hostname.replace('www.', '');

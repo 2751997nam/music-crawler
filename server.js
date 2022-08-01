@@ -29,7 +29,6 @@ new Ignitor(require("@adonisjs/fold"))
 
 const schedule = require('node-schedule');
 
-const MangaLinkCrawlerManager = require(__dirname + "/app/Crawlers/impl/MangaLinkCrawlerManager");
 const ListenerManager = require(__dirname + "/app/Listeners/ListenerManager");
 
 Redis.del('bull*').then(function () {
@@ -39,14 +38,10 @@ Redis.del('bull*').then(function () {
 process.on('uncaughtException', (error) => {
     console.log(error);
 });
-const mangaLinkCrawlerManager = new MangaLinkCrawlerManager();
-schedule.scheduleJob('30 */6 * * *', function(){
-    mangaLinkCrawlerManager.init({});
-});
 
-const MangaCrawler = require(__dirname + '/app/Crawlers/impl/MangaCrawler');
-const mangaCrawler = new MangaCrawler();
+const ListMusicCrawler = require(__dirname + '/app/Crawlers/impl/ListMusicCrawler');
+const listMusicCrawler = new ListMusicCrawler();
 
 schedule.scheduleJob('0 */1 * * *', function(){
-    mangaCrawler.init({});
+    listMusicCrawler.init({});
 });

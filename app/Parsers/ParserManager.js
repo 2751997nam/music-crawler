@@ -1,4 +1,7 @@
 'use strict'
+
+const safeRequire = require("../Utils/SafeRequire");
+
 const Helpers = use("Helpers");
 const dir = Helpers.appRoot() + "/app";
 class ParserManager
@@ -11,7 +14,7 @@ class ParserManager
     }
 
     loadClass(dir) {
-        var className = new (require(dir))();
+        var className = new (safeRequire(dir))();
         return className;
     }
 }

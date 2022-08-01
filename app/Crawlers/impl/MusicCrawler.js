@@ -6,7 +6,7 @@ const Database = use("Database");
 
 const Config = use('Config');
 
-class MangaCrawler extends BaseCrawler {
+class MusicCrawler extends BaseCrawler {
     async init(filter = null) {
         let links = [];
         if (filter && filter.crawlUrls && filter.crawlUrls.length > 0) {
@@ -34,9 +34,9 @@ class MangaCrawler extends BaseCrawler {
         }
         for (let item of links) {
             item.domain = this.getDomain(item.crawl_url);
-            this.addJob("MangaListener", item, {priority: 20});
+            this.addJob("MusicListener", item, {priority: 20});
         }
     }
 }
 
-module.exports = MangaCrawler;
+module.exports = MusicCrawler;
