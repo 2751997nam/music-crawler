@@ -8,38 +8,20 @@ const Log = use('App/Utils/Log');
 const md5 = require('md5');
 const BaseParser = require("../../BaseParser");
 const DateTime = require('date-and-time');
-class ListMusicParser extends BaseParser {
+
+class ListMusicSearchParser extends BaseParser {
     async init(html, input) {
         const $ = cheerio.load(html);
         this.crawlUrl = input.crawl_url;
         this.crawlId = input.crawl_id;
-        console.log('ListMusicParser', this.crawlUrl);
+        console.log('ListMusicSearchParser', this.crawlUrl);
 
         return await this.parse($);
     }
 
     async parse($) {
-        let items = $('#music .media');
+        let items = $('#nav-music .media');
         let saveData = [];
-        let profile = {
-            name: '',
-            slug: '',
-            image_url: '',
-            crawl_url: this.crawlUrl
-        };
-        let profileEle = $('.box_profile');
-        if (profileEle) {
-            let name = $(profileEle).find('.box_profile_singer .artist_name_box');
-            if (name) {
-                profile.name = $(name).text().trim();
-                profile.slug = util.slug(profile.name);
-                let img = $(profileEle).find('img');
-                if (img) {
-                    profile.image_url = $(img).attr('src');
-                }
-            }
-        }
-        console.log('profile', profile);
 
         for (let item of items) {
             let img = $(item).find('img');
@@ -67,9 +49,6 @@ class ListMusicParser extends BaseParser {
                         slug: util.slug($(singer).text().trim()),
                         crawl_url: $(singer).attr('href').includes('https') ? $(singer).attr('href') : 'https://chiasenhac.vn' + $(singer).attr('href')
                     };
-                    if (singerData.slug == profile.slug) {
-                        singerData.image_url = profile.image_url;
-                    }
                     data.singers.push(singerData);
                 }
             }
@@ -81,11 +60,11 @@ class ListMusicParser extends BaseParser {
             }
         }
 
-        let paginationEle = $('#music .pagination li.active').not(':last-child');
+        let paginationEle = $('#nav-music .pagination li.active').not(':last-child');
         if (paginationEle) {
             let current = parseInt($(paginationEle).text().trim());
             if (!isNaN(current)) {
-                let nextUrl = this.crawlUrl.split('?')[0] + '?page=' + (current + 1);
+                let nextUrl = this.crawlUrl.replace(`page_music=${current}`, `page_music=${parseInt(current) + 1}`);
                 if (nextUrl != this.crawlUrl) {
                     return nextUrl;
                 } else {
@@ -173,7 +152,7 @@ class ListMusicParser extends BaseParser {
 
     async afterParse(nextUrl) {
         if (nextUrl) {
-            this.addJob('ListMusicListener', {
+            this.addJob('ListMusicSearchListener', {
                 crawl_id: this.crawlId,
                 crawl_url: nextUrl,
                 domain: this.getDomain(nextUrl),
@@ -184,4 +163,4 @@ class ListMusicParser extends BaseParser {
     
 }
 
-module.exports = ListMusicParser;
+module.exports = ListMusicSearchParser;

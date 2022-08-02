@@ -33,14 +33,41 @@ function Util() {
             str = str.toLowerCase();
 
             // remove accents, swap ñ for n, etc
-            var from = "åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
-            var to = "aaaaaaeeeeiiiioooouuuunc------";
+            var froms = [
+                'àáạảãâầấậẩẫăằắặẳẵ',
+                'èéẹẻẽêềếệểễ',
+                'ìíịỉĩ',
+                'òóọỏõôồốộổỗơờớợởỡ',
+                'ùúụủũưừứựửữ',
+                'ỳýỵỷỹ',
+                'đ',
+                /[^a-zA-Z0-9\-\_]/
+            ];
+            var toes = [
+                'a',
+                'e',
+                'i',
+                'o',
+                'u',
+                'y',
+                'd',
+                'A',
+                'E',
+                'I',
+                'O',
+                'U',
+                'Y',
+                'D',
+                '-',
+            ];
 
-            for (var i = 0, l = from.length; i < l; i++) {
-                str = str.replace(
-                    new RegExp(from.charAt(i), "g"),
-                    to.charAt(i)
-                );
+            for (var i = 0, l = froms.length; i < l; i++) {
+                for (var j = 0; j < froms[i].length; j++) {
+                    str = str.replace(
+                        new RegExp(froms[i].charAt(j), "g"),
+                        toes[i]
+                    );
+                }
             }
 
             str = str
@@ -53,6 +80,7 @@ function Util() {
 
             return str;
         } catch (e) {
+            console.log('err', e);
         } finally {
         }
         return retval;

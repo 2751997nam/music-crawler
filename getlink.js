@@ -4,14 +4,22 @@ let links = [];
 
 for (let element of elements) {
     if (element.getAttribute('href') && element.getAttribute('href').includes('/ca-si/')) {
-        links.push('https://chiasenhac.vn' + element.getAttribute('href'));
+        links.push({
+            link: 'https://chiasenhac.vn' + element.getAttribute('href'),
+            target_type: 'singer'
+        });
+    } else if (element.getAttribute('href') && element.getAttribute('href').includes('filter=ca-si')) {
+        links.push({
+            link: element.getAttribute('href'),
+            target_type: 'singer_search'
+        });
     }
 }
 
 let unique = {};
 
 for (let link of links) {
-    unique[link] = 1;
+    unique[link.link] = link;
 }
 
-console.log(Object.keys(unique));
+console.log(Object.values(unique));

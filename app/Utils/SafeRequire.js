@@ -5,10 +5,17 @@ function safeRequire(modulePath) {
     let requiredModule = null; // or a default object {}
     
     let pathToModule = path.join(modulePath);
-    if (fs.existsSync(pathToModule)) {
-        requiredModule = require(pathToModule);
+    
+    if (fs.existsSync(modulePath + '.js')) {
+        try {
+            requiredModule = require(modulePath);
+            // console.log('requiredModule', requiredModule);
+        } catch (error) {
+            console.log('error', error);
+        }
+        // console.log('required done');
     } else {
-        throw new Error('Module Not Found: ' . pathToModule);
+        console.log('Module Not Found: ', modulePath);
     }
 
     return requiredModule;

@@ -2,9 +2,9 @@
 const { exec } = require('child_process');
 const BaseListener = require('../BaseListener');
 
-class ListMusicListener extends BaseListener {
+class ListMusicSearchListener extends BaseListener {
     getParser() {
-        return 'ListMusicParser';
+        return 'ListMusicSearchParser';
     }
 
     async init (data) {
@@ -12,4 +12,4 @@ class ListMusicListener extends BaseListener {
     }
 }
 
-module.exports = ListMusicListener
+module.exports = ListMusicSearchListener

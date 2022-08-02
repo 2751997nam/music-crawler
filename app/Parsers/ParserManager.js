@@ -10,7 +10,9 @@ class ParserManager
         this.implDir = dir + "/Parsers/impl";
         let parser = this.loadClass(this.implDir + '/' + input.domain + '/' + parserName);
         let result = await parser.init(html, input);
-        await parser.afterParse(result);
+        if (typeof parser.afterParse == 'function') {
+            await parser.afterParse(result);
+        }
     }
 
     loadClass(dir) {

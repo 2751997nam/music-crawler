@@ -17,6 +17,7 @@ class ListenerManager {
                 this.implDir + "/" + job.name
             );
             Log.info(job.name + ' ', job.data.crawl_url);
+            console.log(job.name, job.data.crawl_url);
             let result = await listener.init(job.data);
             let parser = listener.getParser();
             if (parser) {
