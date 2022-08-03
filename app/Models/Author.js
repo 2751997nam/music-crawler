@@ -5,7 +5,7 @@ const Model = use('Model')
 
 class Author extends Model {
     static get table () {
-        return 'Author';
+        return 'author';
     }
 
     static boot() {

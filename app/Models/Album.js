@@ -5,7 +5,7 @@ const Model = use('Model')
 
 class Album extends Model {
     static get table () {
-        return 'Album';
+        return 'album';
     }
 
     static boot() {

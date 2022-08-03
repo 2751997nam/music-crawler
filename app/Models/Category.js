@@ -5,7 +5,7 @@ const Model = use('Model')
 
 class Category extends Model {
     static get table () {
-        return 'Category';
+        return 'category';
     }
 
     static boot() {
