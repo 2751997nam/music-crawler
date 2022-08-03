@@ -7,6 +7,7 @@ const Author = use("App/Models/Author");
 const Category = use("App/Models/Category");
 const Album = use("App/Models/Album");
 const Contributor = use("App/Models/Contributor");
+const DateTime = require('date-and-time');
 
 class MusicParser {
     async init(html, input) {
@@ -163,6 +164,7 @@ class MusicParser {
                     item.url = firstUrl.url.replace(`/${firstUrl.quality}/`, `/${item.quality}/`);
                     item.url = item.url.replace(`.${firstUrl.extension}`, `.${item.extension}`);
                 }
+                item.url = item.url.replace(`/${DateTime.format(new Date(), 'D')}/`, '/{date}/');
             }
         }
         Log.info('musicLinks: ', musicLinks);
