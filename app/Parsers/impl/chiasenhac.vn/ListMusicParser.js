@@ -85,6 +85,10 @@ class ListMusicParser extends BaseParser {
         if (paginationEle) {
             let current = parseInt($(paginationEle).text().trim());
             if (!isNaN(current)) {
+                let params = new URLSearchParams(this.crawlUrl.substring(this.crawlUrl.indexOf('?') + 1));
+                if (params && params.get('page') && params.get('page') > current) {
+                    continue;
+                }
                 let nextUrl = this.crawlUrl.split('?')[0] + '?page=' + (current + 1);
                 if (nextUrl != this.crawlUrl) {
                     return nextUrl;

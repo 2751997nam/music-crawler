@@ -19,3 +19,4 @@ sql-logs/
 public/manga
 public/images
 **/.DS_Store
+json/*
