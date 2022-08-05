@@ -16,4 +16,6 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
+Route.get('/import/crawl-link', 'CrawlLinkController.import');
+
 Route.on('/').render('welcome');

@@ -1,1 +1,1 @@
-ssh root@toptoon69.com -t 'cd /home/mymanga && git pull && pm2 restart mymanga'
+ssh root@crawler-music.macer.club -t 'cd /root/music-crawler && git pull && pm2 restart music-crawler'

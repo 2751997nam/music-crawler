@@ -10,6 +10,7 @@ const Config = use('Config');
 
 class LinkCrawler extends BaseCrawler {
     async init(filter = null) {
+        let retVal = [];
         let uniqueSingers = {};
         for (let item of singers) {
             item.crawl_url = item.crawl_url.replace(/\s+/g, '%20');
@@ -25,8 +26,11 @@ class LinkCrawler extends BaseCrawler {
             if (!first) {
                 console.log('insert', item.crawl_url);
                 await Database.table("crawl_link").insert(item);
+                retVal.push(item.crawl_url);
             }
         }
+
+        return retVal;
     }
 }
 
