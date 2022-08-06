@@ -227,7 +227,7 @@ class MusicParser {
 
     async saveContributor (data) {
         let retVal = [];
-        let contributor = await Contributor.query().where('slug', data.slug).first();
+        let contributor = await Contributor.query().where('slug', data.slug).where('name', data.name).first();
         if (contributor) {
 
         } else {
@@ -250,7 +250,7 @@ class MusicParser {
     async saveAuthors (data) {
         let retVal = [];
         for (let item of data) {
-            let author = await Author.query().where('slug', item.slug).first();
+            let author = await Author.query().where('slug', item.slug).where('name', item.name).first();
             if (author) {
             } else {
                 author = new Author();
@@ -303,7 +303,7 @@ class MusicParser {
 
     async saveAlbum (data) {
         let retVal = [];
-        let album = await Album.query().where('slug', data.slug).first();
+        let album = await Album.query().where('slug', data.slug).where('name', data.name).first();
         if (album) {
 
         } else {

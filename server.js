@@ -51,7 +51,7 @@ const linkCrawler = new LinkCrawler();
 // schedule.scheduleJob('0 */8 * * *', function(){
 //     listMusicCrawler.init({});
 // });
-// musicCrawler.init({});
+musicCrawler.init({});
 // listMusicCrawler.init({});
 // linkCrawler.init({});
 schedule.scheduleJob('0 */1 * * *', function(){
