@@ -39,20 +39,20 @@ process.on('uncaughtException', (error) => {
     console.log(error);
 });
 
-const ListMusicCrawler = require(__dirname + '/app/Crawlers/impl/ListMusicCrawler');
-const listMusicCrawler = new ListMusicCrawler();
+// const ListMusicCrawler = require(__dirname + '/app/Crawlers/impl/ListMusicCrawler');
+// const listMusicCrawler = new ListMusicCrawler();
 
-const MusicCrawler = require(__dirname + '/app/Crawlers/impl/MusicCrawler');
-const musicCrawler = new MusicCrawler();
+// const MusicCrawler = require(__dirname + '/app/Crawlers/impl/MusicCrawler');
+// const musicCrawler = new MusicCrawler();
 
-const LinkCrawler = require(__dirname + '/app/Crawlers/impl/LinkCrawler');
-const linkCrawler = new LinkCrawler();
+// const LinkCrawler = require(__dirname + '/app/Crawlers/impl/LinkCrawler');
+// const linkCrawler = new LinkCrawler();
 
 // schedule.scheduleJob('0 */8 * * *', function(){
 //     listMusicCrawler.init({});
 // });
 //musicCrawler.init({});
-listMusicCrawler.init({});
+//listMusicCrawler.init({});
 // linkCrawler.init({});
 schedule.scheduleJob('0 */1 * * *', function(){
 });
