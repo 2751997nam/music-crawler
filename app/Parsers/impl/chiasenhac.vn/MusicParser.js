@@ -238,7 +238,7 @@ class MusicParser {
         }
         retVal.push(contributor.id);
 
-        await Database.table('music_n_contributor').where('music_id', this.musicId).delete();
+        // await Database.table('music_n_contributor').where('music_id', this.musicId).delete();
         await Database.table('music_n_contributor').insert({
             music_id: this.musicId,
             contributor_id: contributor.id
@@ -268,7 +268,7 @@ class MusicParser {
                 music_id: this.musicId
             });
         }
-        await Database.table('music_n_author').where('music_id', this.musicId).delete();
+        // await Database.table('music_n_author').where('music_id', this.musicId).delete();
         await Database.table('music_n_author').insert(mns);
 
         return retVal;
@@ -295,7 +295,7 @@ class MusicParser {
                 music_id: this.musicId
             });
         }
-        await Database.table('music_n_category').where('music_id', this.musicId).delete();
+        // await Database.table('music_n_category').where('music_id', this.musicId).delete();
         await Database.table('music_n_category').insert(mns);
 
         return retVal;
@@ -314,7 +314,7 @@ class MusicParser {
         }
         retVal.push(album.id);
 
-        await Database.table('music_n_album').where('music_id', this.musicId).delete();
+        // await Database.table('music_n_album').where('music_id', this.musicId).delete();
         await Database.table('music_n_album').insert({
             music_id: this.musicId,
             album_id: album.id
