@@ -15,8 +15,8 @@ class BaseListener {
 
     async getHtml (url) {
         let result = await new Promise((resolve, reject) => {
-            // exec("curl --location --insecure --request GET '" + url + "'", function (error, stdout, stderr) {
-            exec("curl --location --request GET '" + url + "'", function (error, stdout, stderr) {
+            exec("curl --location --insecure --request GET '" + url + "'", function (error, stdout, stderr) {
+            // exec("curl --location --request GET '" + url + "'", function (error, stdout, stderr) {
                 if (error) {
                     Log.error('error ', error);
                     reject(stderr);
