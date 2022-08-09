@@ -19,7 +19,7 @@ for (let element of elements) {
 let unique = {};
 
 for (let link of links) {
-    unique[link.link] = link;
+    unique[link.crawl_url] = link;
 }
 
 console.log(Object.values(unique));
