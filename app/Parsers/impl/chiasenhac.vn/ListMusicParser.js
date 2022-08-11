@@ -115,6 +115,7 @@ class ListMusicParser extends BaseParser {
         let md5Url = md5(data.crawl_url);
         let music = await Music.query().where('md5_crawl_url', md5Url).first();
         if (music) {
+            return null;
             // let isUpdate = await this.updateMusic(music, data);
         } else {
             music = new Music();
