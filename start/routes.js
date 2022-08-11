@@ -19,5 +19,6 @@ const Route = use('Route')
 Route.get('/crawl/crawl-link', 'CrawlLinkController.crawl');
 Route.get('/crawl/list-music', 'ListMusicController.crawl');
 Route.get('/crawl/music', 'MusicController.crawl');
+Route.get('/crawl/list-singer', 'ListSingerController.crawl');
 
 Route.on('/').render('welcome');

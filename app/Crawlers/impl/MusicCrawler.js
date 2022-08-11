@@ -13,7 +13,7 @@ class MusicCrawler extends BaseCrawler {
         query.where('target_type', 'music');
         let links = await query.where('status', 'ACTIVE')
             // .where('created_at', '<=', DateTime.format(new Date(), 'YY-MM-DD HH:mm::ss'))
-            // .limit(1)
+            .limit(10000)
             .orderBy('id', 'asc')
             .select('*');
         for (let item of links) {

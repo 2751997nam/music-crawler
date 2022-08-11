@@ -148,7 +148,7 @@ class ListMusicParser extends BaseParser {
     async saveSingers (data) {
         let retVal = [];
         for (let item of data) {
-            let singer = await Singer.query().where('slug', item.slug).where('name', item.name).first();
+            let singer = await Singer.query().where('slug', item.slug).where('crawl_url', item.crawl_url).first();
             if (singer) {
                 singer.crawl_url = item.crawl_url;
                 if (item.image_url && item.image_url != singer.image_url) {
