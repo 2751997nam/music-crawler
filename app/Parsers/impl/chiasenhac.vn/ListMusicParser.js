@@ -41,7 +41,7 @@ class ListMusicParser extends BaseParser {
         }
         console.log('profile', profile);
         console.log('music length', items.length);
-        Log.info('save music: ', items.length);
+        Log.info('music length: ', items.length);
 
         for (let item of items) {
             let img = $(item).find('img');
