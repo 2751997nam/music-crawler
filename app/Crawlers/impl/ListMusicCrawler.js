@@ -17,6 +17,7 @@ class ListMusicCrawler extends BaseCrawler {
             // .limit(1)
             .select('*');
         for (let item of links) {
+            console.log('singer', item.crawl_url);
             item.crawl_id = item.id;
             item.domain = this.getDomain(item.crawl_url);
             this.addJob("ListMusicListener", item);
@@ -31,6 +32,7 @@ class ListMusicCrawler extends BaseCrawler {
             // .limit(1)
             .select('*');
         for (let item of links) {
+            console.log('singer_search', item.crawl_url);
             item.crawl_id = item.id;
             item.crawl_url += '&page_music=1';
             item.domain = this.getDomain(item.crawl_url);
