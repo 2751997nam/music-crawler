@@ -73,13 +73,13 @@ class ListSingerParser extends BaseParser {
                 singer = new Singer();
                 singer.name = item.name;
                 singer.slug = item.slug;
-                singer.crawl_url = item.crawl_url;
+                singer.crawl_url = item.crawl_url.replace('/\s+/g', '%20');
                 if (item.image_url) {
                     singer.image_url = item.image_url;
                 }
                 await singer.save();
                 await Database.table('crawl_link').insert([{
-                    crawl_url: item.crawl_url,
+                    crawl_url: item.crawl_url.replace('/\s+/g', '%20'),
                     target_type: item.crawl_url.includes('filter=ca-si') ? 'singer_search' : 'singer'
                 }])
             }

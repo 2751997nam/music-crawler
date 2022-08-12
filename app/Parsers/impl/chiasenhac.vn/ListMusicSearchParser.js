@@ -104,7 +104,7 @@ class ListMusicSearchParser extends BaseParser {
             music.md5_crawl_url = md5Url;
             await music.save();
             await Database.table('crawl_link').insert([{
-                crawl_url: data.crawl_url,
+                crawl_url: data.crawl_url.replace('/\s+/g', '%20'),
                 target_id: music.id,
                 target_type: 'music'
             }])
@@ -144,7 +144,7 @@ class ListMusicSearchParser extends BaseParser {
                 }
                 await singer.save();
                 await Database.table('crawl_link').insert([{
-                    crawl_url: item.crawl_url,
+                    crawl_url: item.crawl_url.replace('/\s+/g', '%20'),
                     target_type: item.crawl_url.includes('filter=ca-si') ? 'singer_search' : 'singer'
                 }])
             }

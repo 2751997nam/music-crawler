@@ -25,7 +25,7 @@ class ListMusicParser extends BaseParser {
             name: '',
             slug: '',
             image_url: '',
-            crawl_url: this.crawlUrl
+            crawl_url: this.crawlUrl.replace('/\s+/g', '%20')
         };
         let profileEle = $('.box_profile');
         if (profileEle) {
@@ -168,7 +168,7 @@ class ListMusicParser extends BaseParser {
                 }
                 await singer.save();
                 await Database.table('crawl_link').insert([{
-                    crawl_url: item.crawl_url,
+                    crawl_url: item.crawl_url.replace('/\s+/g', '%20'),
                     target_type: item.crawl_url.includes('filter=ca-si') ? 'singer_search' : 'singer'
                 }])
             }
