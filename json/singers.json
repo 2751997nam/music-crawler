@@ -1,146 +1,146 @@
 [
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=a&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=a&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=b&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=b&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=c&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=c&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=d&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=d&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=e&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=e&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=f&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=f&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=g&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=g&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=h&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=h&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=i&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=a&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=j&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=j&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=k&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=k&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=l&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=l&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=m&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=m&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=n&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=n&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=o&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=o&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=p&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=p&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=q&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=q&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=r&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=r&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=s&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=s&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=t&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=t&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=u&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=u&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=v&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=v&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=w&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=w&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=x&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=x&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=y&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=y&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=z&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=z&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=0&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=0&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=1&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=1&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=2&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=2&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=3&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=3&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=4&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=4&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=5&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=5&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=6&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=6&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=7&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=7&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=8&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=8&page_music=1",
+        "target_type": "singer_search"
     },
     {
-        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=9&page_artist=1",
-        "target_type": "list_singer"
+        "crawl_url": "https://chiasenhac.vn/tim-kiem?q=9&page_music=1",
+        "target_type": "singer_search"
     }
 ]

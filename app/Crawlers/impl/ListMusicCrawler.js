@@ -11,7 +11,7 @@ class ListMusicCrawler extends BaseCrawler {
     async init(filter = null) {
         let query = Database.table("crawl_link");
         query.where('target_type', 'singer')
-        query.where('id', '>=', 273378)
+        query.where('id', '>=', 276048)
         // query.where('created_at', '>=', '2022-08-02 04:00:00');
         let links = await query.where('status', 'ACTIVE')
             // .limit(1)
@@ -22,10 +22,9 @@ class ListMusicCrawler extends BaseCrawler {
             this.addJob("ListMusicListener", item);
         }
 
-
         query = Database.table("crawl_link");
         query.where('target_type', 'singer_search')
-        query.where('id', '>=', 273378)
+        query.where('id', '>=', 276048)
         // query.where('created_at', '>=', '2022-08-02 04:00:00');
         links = await query.where('status', 'ACTIVE')
             // .where('id', 13261)
