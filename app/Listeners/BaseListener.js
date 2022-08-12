@@ -14,6 +14,7 @@ class BaseListener {
     }
 
     async getHtml (url) {
+        url = url.replace(/\s+/gm, '%20');
         let result = await new Promise((resolve, reject) => {
             exec("curl --location --insecure --request GET '" + url + "'", function (error, stdout, stderr) {
             // exec("curl --location --request GET '" + url + "'", function (error, stdout, stderr) {
