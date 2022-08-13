@@ -143,8 +143,8 @@ class ListMusicParser extends BaseParser {
                 }
                 await Database.table('music_n_singer').insert(mns);
             }
+            return music;
         }
-        return music;
 
     }
 
