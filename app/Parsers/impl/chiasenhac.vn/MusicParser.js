@@ -177,7 +177,7 @@ class MusicParser {
         for (let link of links) {
             saveData.push({...link, music_id: this.musicId});
         }
-        await Database.table('music_link').where('music_id', this.musicId).delete();
+        // await Database.table('music_link').where('music_id', this.musicId).delete();
         await Database.table('music_link').insert(saveData);
     }
     
