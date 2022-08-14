@@ -164,12 +164,16 @@ class MusicParser {
                     item.url = firstUrl.url.replace(`/${firstUrl.quality}/`, `/${item.quality}/`);
                     item.url = item.url.replace(`.${firstUrl.extension}`, `.${item.extension}`);
                 }
-                item.url = item.url.replace(`/${DateTime.format(new Date(), 'D')}/`, '/{date}/');
+                item.url = item.url.replace(`/${this.getDayOfWeek()}/`, '/{date}/');
             }
         }
         Log.info('musicLinks: ', musicLinks);
 
         return musicLinks;
+    }
+
+    getDayOfWeek () {
+        return (new Date()).getDay();
     }
 
     async saveMusicLinks(links) {
